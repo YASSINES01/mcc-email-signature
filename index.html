@@ -364,22 +364,29 @@
                 
                 <!-- START EMAIL SIGNATURE HTML -->
                 <div id="signature-output">
+                    <!-- Table-based layout is essential for Outlook Desktop compatibility -->
                     <table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 13px; color: #333333; width: 100%; max-width: 550px; background-color: #ffffff; line-height: 1.4;">
                         <tr>
-                            <!-- 1. Logo Area (110x110) -->
-                            <td width="110" valign="middle" style="padding-right: 20px; width: 110px; max-width: 110px;">
-                                <img src="https://yassines01.github.io/mcc-email-signature/Logo.png" alt="MCC Logo" width="110" style="display: block; width: 110px; max-width: 110px; border: 0; height: auto;">
+                            <!-- 1. Logo Area (110x110 fixed dimensions) -->
+                            <td width="110" valign="middle" style="width: 110px; min-width: 110px;">
+                                <img src="https://yassines01.github.io/mcc-email-signature/Logo.png" alt="MCC Logo" width="110" height="110" style="display: block; width: 110px; max-width: 110px; height: 110px; border: 0;">
                             </td>
                             
-                            <!-- 2. Vertical Divider Area (80px height, centered vertically) -->
-                            <td width="2" valign="middle" style="padding-right: 20px; width: 2px;">
+                            <!-- Spacing cell (Ensures separation in Outlook) -->
+                            <td width="20" style="width: 20px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+
+                            <!-- 2. Vertical Divider Area (80px height, centered) -->
+                            <td width="2" valign="middle" style="width: 2px;">
                                 <table cellpadding="0" cellspacing="0" border="0" style="width: 2px; height: 80px; background-color: #041E42;">
                                     <tr>
-                                        <td style="font-size:0; line-height:0;">&nbsp;</td>
+                                        <td style="font-size:0; line-height:0; height: 80px;">&nbsp;</td>
                                     </tr>
                                 </table>
                             </td>
                             
+                            <!-- Spacing cell (Ensures separation in Outlook) -->
+                            <td width="20" style="width: 20px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+
                             <!-- 3. Content Area -->
                             <td valign="middle">
                                 <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
@@ -476,14 +483,14 @@
     <div id="fallback-modal" class="modal">
         <div class="modal-content">
             <h3>Copie manuelle requise</h3>
-            <p style="margin-bottom: 1rem; color: #475569;">Votre navigateur a bloqué la copie automatique en texte enrichi. Pour conserver le design parfait sur Gmail, suivez ces étapes :</p>
+            <p style="margin-bottom: 1rem; color: #475569;">Votre navigateur a bloqué la copie automatique en texte enrichi. Pour conserver le design parfait, suivez ces étapes :</p>
             
             <div id="fallback-signature-container"></div>
             
             <ul style="margin-bottom: 1.5rem; color: #1E293B;">
                 <li>La signature ci-dessus a été <strong>présélectionnée</strong> pour vous.</li>
                 <li>Appuyez sur <strong>Ctrl+C</strong> (Windows) ou <strong>Cmd+C</strong> (Mac) pour la copier.</li>
-                <li>Collez-la directement dans les paramètres de signature Gmail.</li>
+                <li>Collez-la directement dans les paramètres de votre messagerie.</li>
             </ul>
             <button class="btn-primary" onclick="closeModals()">C'est compris</button>
         </div>
@@ -566,7 +573,7 @@
             const wrapLinkedin = document.getElementById('wrap-linkedin');
             const elLinkedin = document.getElementById('sig-linkedin');
 
-            // Identity
+            // Identity (textContent prevents HTML injection)
             elName.textContent = name || 'Prénom Nom';
             elPosition.textContent = position || 'Position au MCC';
 
@@ -610,6 +617,7 @@
             const originalNode = document.getElementById('signature-output');
             const clone = originalNode.cloneNode(true);
             
+            // Physically remove nodes flagged for deletion (avoids empty spaces in Outlook/Gmail)
             const nodesToRemove = clone.querySelectorAll('[data-remove="true"]');
             nodesToRemove.forEach(node => {
                 if(node.parentNode) {
@@ -617,6 +625,7 @@
                 }
             });
 
+            // Strip ID attributes for cleaner exported HTML
             const allElements = clone.querySelectorAll('*');
             allElements.forEach(el => el.removeAttribute('id'));
 
