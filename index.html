@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -110,6 +110,11 @@
             font-weight: 400;
             margin-left: 0.25rem;
         }
+        
+        .required-badge {
+            color: var(--error);
+            margin-left: 0.25rem;
+        }
 
         input {
             width: 100%;
@@ -138,7 +143,8 @@
             display: none;
             color: var(--error);
             font-size: 0.75rem;
-            margin-top: 0.25rem;
+            margin-top: 0.4rem;
+            font-weight: 500;
         }
         
         input.invalid + .error-msg {
@@ -235,9 +241,11 @@
             background: var(--white);
             padding: 2.5rem;
             border-radius: 6px;
-            max-width: 500px;
+            max-width: 550px;
             width: 90%;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-content h3 {
@@ -255,6 +263,14 @@
         .modal-content li {
             margin-bottom: 0.75rem;
             font-size: 0.95rem;
+        }
+
+        #fallback-signature-container {
+            border: 1px dashed var(--border-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: var(--white);
+            overflow-x: auto;
         }
 
         .toast {
@@ -292,75 +308,84 @@
     <div class="container">
         <!-- Form Area -->
         <div class="card">
-            <h2 class="card-header">Member Details</h2>
+            <h2 class="card-header">Détails du membre</h2>
             <form id="sig-form" onsubmit="return false;">
+                
                 <div class="form-group">
-                    <label for="f-name">Full Name</label>
-                    <input type="text" id="f-name" placeholder="e.g. Yassine Sassioui" oninput="updateSignature()">
+                    <label for="f-name">Nom complet <span class="required-badge">*</span></label>
+                    <input type="text" id="f-name" placeholder="Ex: Yassine Sassioui" oninput="updateSignature()" required>
+                    <span class="error-msg" id="err-name">Le nom est obligatoire.</span>
                 </div>
+                
                 <div class="form-group">
-                    <label for="f-position">Position at MCC</label>
-                    <input type="text" id="f-position" placeholder="e.g. President" oninput="updateSignature()">
+                    <label for="f-position">Fonction au MCC <span class="required-badge">*</span></label>
+                    <input type="text" id="f-position" placeholder="Ex: President" oninput="updateSignature()" required>
+                    <span class="error-msg" id="err-position">La fonction est obligatoire.</span>
                 </div>
+                
                 <div class="form-group">
-                    <label for="f-dept">Department <span class="optional-badge">(Optional)</span></label>
-                    <input type="text" id="f-dept" placeholder="e.g. Executive Board" oninput="updateSignature()">
+                    <label for="f-dept">Département <span class="optional-badge">(Optionnel)</span></label>
+                    <input type="text" id="f-dept" placeholder="Ex: Executive Board" oninput="updateSignature()">
                 </div>
+                
                 <div class="form-group">
-                    <label for="f-email">Professional Email</label>
-                    <input type="email" id="f-email" placeholder="e.g. name@domain.com" oninput="updateSignature()">
-                    <span class="error-msg">Please enter a valid email address.</span>
+                    <label for="f-email">Email professionnel <span class="required-badge">*</span></label>
+                    <input type="email" id="f-email" placeholder="Ex: prenom.nom@domain.com" oninput="updateSignature()" required>
+                    <span class="error-msg" id="err-email">Veuillez saisir une adresse email valide.</span>
                 </div>
+                
                 <div class="form-group">
-                    <label for="f-phone">Phone Number <span class="optional-badge">(Optional)</span></label>
-                    <input type="tel" id="f-phone" placeholder="e.g. +212 6 XX XX XX XX" oninput="updateSignature()">
+                    <label for="f-phone">Numéro de téléphone <span class="optional-badge">(Optionnel)</span></label>
+                    <input type="tel" id="f-phone" placeholder="Ex: +212 6 XX XX XX XX" oninput="updateSignature()">
                 </div>
+                
                 <div class="form-group">
-                    <label for="f-linkedin">Individual LinkedIn URL <span class="optional-badge">(Optional)</span></label>
-                    <input type="url" id="f-linkedin" placeholder="e.g. https://www.linkedin.com/in/profile" oninput="updateSignature()">
-                    <span class="error-msg">Must be a valid HTTPS LinkedIn profile URL.</span>
+                    <label for="f-linkedin">Lien Profil LinkedIn <span class="optional-badge">(Optionnel)</span></label>
+                    <input type="url" id="f-linkedin" placeholder="Ex: https://www.linkedin.com/in/votreprofil" oninput="updateSignature()">
+                    <span class="error-msg" id="err-linkedin">L'URL doit commencer par https://www.linkedin.com/in/ ou https://linkedin.com/in/</span>
                 </div>
                 
                 <div class="btn-group">
-                    <button type="button" class="btn-primary" onclick="copySignature()">Copy Signature</button>
-                    <button type="button" class="btn-secondary" onclick="downloadHTML()">Download HTML</button>
+                    <button type="button" class="btn-primary" onclick="copySignature()">Copier la Signature</button>
+                    <button type="button" class="btn-secondary" onclick="downloadHTML()">Télécharger HTML</button>
                 </div>
-                <div style="display: flex; justify-content: space-between; margin-top: 1rem;">
-                    <button type="button" class="btn-text" onclick="showModal('guide-modal')">Gmail Installation Guide</button>
-                    <button type="button" class="btn-text" onclick="resetForm()">Reset Form</button>
+                
+                <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+                    <button type="button" class="btn-text" onclick="showModal('guide-modal')">Guide d'installation Gmail</button>
+                    <button type="button" class="btn-text" onclick="resetForm()">Réinitialiser le formulaire</button>
                 </div>
             </form>
         </div>
 
         <!-- Preview Area -->
         <div class="card">
-            <h2 class="card-header">Signature Preview</h2>
+            <h2 class="card-header">Aperçu de la signature</h2>
             <div class="preview-container">
                 
                 <!-- START EMAIL SIGNATURE HTML -->
-                <!-- Do not add wrapper divs inside this block, it is cloned exactly as is -->
                 <div id="signature-output">
                     <table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 13px; color: #333333; width: 100%; max-width: 500px; background-color: #ffffff; line-height: 1.4;">
                         <tr>
-                            <!-- Logo Area -->
-                            <td width="90" valign="top" style="padding-right: 18px; border-right: 2px solid #041E42;">
-                                <!-- Absolute public URL with fallback -->
-                                <img src="https://yassines01.github.io/mcc-email-signature/logo.png" alt="MCC Logo" width="90" style="display: block; width: 90px; max-width: 90px; border: 0; height: auto;" onerror="this.onerror=null; this.src='https://via.placeholder.com/90x90/041E42/FFFFFF?text=MCC';">
+                            <!-- Logo Area (Absolute URL, fixed dimensions, no onerror) -->
+                            <td width="90" valign="top" style="padding-right: 18px; border-right: 2px solid #041E42; width: 90px; max-width: 90px;">
+                                <img src="https://yassines01.github.io/mcc-email-signature/Logo.png" alt="MCC Logo" width="90" style="display: block; width: 90px; max-width: 90px; border: 0; height: auto;">
                             </td>
+                            
                             <!-- Content Area -->
                             <td valign="top" style="padding-left: 18px;">
                                 <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
                                     <tr>
                                         <td style="padding-bottom: 2px;">
-                                            <span id="sig-name" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; color: #041E42;">[Full Name]</span>
+                                            <span id="sig-name" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; color: #041E42;">Prénom Nom</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="padding-bottom: 2px;">
-                                            <span id="sig-position" style="font-family: Arial, sans-serif; font-size: 13px; color: #475569;">[Position at MCC]</span>
+                                            <span id="sig-position" style="font-family: Arial, sans-serif; font-size: 13px; color: #475569;">Position au MCC</span>
                                         </td>
                                     </tr>
-                                    <tr id="row-dept" style="display: none;">
+                                    <!-- Department Row -->
+                                    <tr id="row-dept" data-remove="true" style="display: none;">
                                         <td style="padding-bottom: 4px;">
                                             <span id="sig-dept" style="font-family: Arial, sans-serif; font-size: 12px; color: #64748B;"></span>
                                         </td>
@@ -370,11 +395,11 @@
                                     <tr>
                                         <td style="padding-top: 6px; padding-bottom: 10px;">
                                             <table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 12px; color: #333333;">
-                                                <tr id="row-contact">
+                                                <tr>
                                                     <td id="col-email" style="padding-right: 8px;">
-                                                        <a id="sig-email" href="#" style="color: #333333; text-decoration: none;">[Email Address]</a>
+                                                        <a id="sig-email" href="#" style="color: #333333; text-decoration: none;">email@domain.com</a>
                                                     </td>
-                                                    <td id="col-phone" style="border-left: 1px solid #CBD5E1; padding-left: 8px; display: none;">
+                                                    <td id="col-phone" data-remove="true" style="border-left: 1px solid #CBD5E1; padding-left: 8px; display: none;">
                                                         <a id="sig-phone" href="#" style="color: #333333; text-decoration: none;"></a>
                                                     </td>
                                                 </tr>
@@ -394,7 +419,7 @@
                                             <table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 11px;">
                                                 <tr>
                                                     <td>
-                                                        <span id="wrap-linkedin" style="display: none;">
+                                                        <span id="wrap-linkedin" data-remove="true" style="display: none;">
                                                             <a id="sig-linkedin" href="#" target="_blank" style="color: #041E42; text-decoration: none; font-weight: bold;">LinkedIn</a>
                                                             <span style="color: #041E42; margin: 0 6px;">|</span>
                                                         </span>
@@ -418,168 +443,191 @@
     <!-- Modals -->
     <div id="guide-modal" class="modal">
         <div class="modal-content">
-            <h3>Gmail Installation Guide</h3>
+            <h3>Guide d'installation Gmail</h3>
             <ol>
-                <li>Click <strong>Copy Signature</strong> in this generator.</li>
-                <li>Open Gmail and click the gear icon ⚙️ (Settings).</li>
-                <li>Select <strong>See all settings</strong>.</li>
-                <li>Scroll down to the <strong>Signature</strong> section.</li>
-                <li>Click <strong>Create new</strong> and name it.</li>
-                <li>Paste (Ctrl+V / Cmd+V) directly into the text box.</li>
-                <li>Set your Signature Defaults for new emails and replies.</li>
-                <li>Scroll to the very bottom and click <strong>Save Changes</strong>.</li>
+                <li>Cliquez sur <strong>Copier la Signature</strong>.</li>
+                <li>Ouvrez Gmail et cliquez sur la roue dentée ⚙️ (Paramètres).</li>
+                <li>Sélectionnez <strong>Voir tous les paramètres</strong>.</li>
+                <li>Descendez jusqu'à la section <strong>Signature</strong>.</li>
+                <li>Cliquez sur <strong>Créer</strong> et donnez-lui un nom (ex: MCC).</li>
+                <li>Cliquez dans la zone de texte vide et faites Coller (Ctrl+V / Cmd+V).</li>
+                <li>Réglez les "Valeurs par défaut" pour les nouveaux emails.</li>
+                <li>Descendez tout en bas et cliquez sur <strong>Enregistrer les modifications</strong>.</li>
             </ol>
-            <button class="btn-primary" onclick="closeModals()">Close</button>
+            <button class="btn-primary" onclick="closeModals()">Fermer</button>
         </div>
     </div>
 
     <div id="fallback-modal" class="modal">
         <div class="modal-content">
-            <h3>Manual Copy Required</h3>
-            <p style="margin-bottom: 1rem; color: #475569;">Your browser blocked the automatic rich-text copy. To preserve the design in Gmail, please follow these steps:</p>
+            <h3>Copie manuelle requise</h3>
+            <p style="margin-bottom: 1rem; color: #475569;">Votre navigateur a bloqué la copie automatique en texte enrichi. Pour conserver le design parfait sur Gmail, suivez ces étapes :</p>
+            
+            <!-- Safe container for manual copy -->
+            <div id="fallback-signature-container"></div>
+            
             <ul style="margin-bottom: 1.5rem; color: #1E293B;">
-                <li>The signature has been <strong>highlighted</strong> for you below.</li>
-                <li>Press <strong>Ctrl+C</strong> (Windows) or <strong>Cmd+C</strong> (Mac) on your keyboard to copy it.</li>
-                <li>Paste it into your Gmail signature settings.</li>
+                <li>La signature ci-dessus a été <strong>présélectionnée</strong> pour vous.</li>
+                <li>Appuyez sur <strong>Ctrl+C</strong> (Windows) ou <strong>Cmd+C</strong> (Mac) pour la copier.</li>
+                <li>Collez-la directement dans les paramètres de signature Gmail.</li>
             </ul>
-            <button class="btn-primary" onclick="closeModals()">I understand</button>
+            <button class="btn-primary" onclick="closeModals()">C'est compris</button>
         </div>
     </div>
 
     <!-- Toast Notification -->
     <div id="toast" class="toast">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-        Signature successfully copied!
+        Signature copiée avec succès !
     </div>
 
     <script>
-        // XSS Prevention Utility
-        function escapeHTML(str) {
-            if (!str) return '';
-            return str.replace(/[&<>'"]/g, tag => ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                "'": '&#39;',
-                '"': '&quot;'
-            }[tag]));
-        }
-
-        // Validation Utilities
+        // --- Validation Utilities ---
         function isValidEmail(email) {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
 
         function isValidLinkedIn(url) {
-            // Must be a valid linkedin.com profile link starting with https
-            return /^https:\/\/(www\.)?linkedin\.com\/.*$/i.test(url);
+            // Must strictly start with https://www.linkedin.com/in/ or https://linkedin.com/in/
+            return /^https:\/\/(www\.)?linkedin\.com\/in\/[^\s]+$/i.test(url);
+        }
+
+        // --- Core Logic ---
+        function validateForm() {
+            let isValid = true;
+
+            const nameInput = document.getElementById('f-name');
+            if (!nameInput.value.trim()) {
+                nameInput.classList.add('invalid');
+                isValid = false;
+            } else {
+                nameInput.classList.remove('invalid');
+            }
+
+            const positionInput = document.getElementById('f-position');
+            if (!positionInput.value.trim()) {
+                positionInput.classList.add('invalid');
+                isValid = false;
+            } else {
+                positionInput.classList.remove('invalid');
+            }
+
+            const emailInput = document.getElementById('f-email');
+            if (!emailInput.value.trim() || !isValidEmail(emailInput.value.trim())) {
+                emailInput.classList.add('invalid');
+                isValid = false;
+            } else {
+                emailInput.classList.remove('invalid');
+            }
+
+            const linkedinInput = document.getElementById('f-linkedin');
+            const linkedinVal = linkedinInput.value.trim();
+            if (linkedinVal && !isValidLinkedIn(linkedinVal)) {
+                linkedinInput.classList.add('invalid');
+                isValid = false;
+            } else {
+                linkedinInput.classList.remove('invalid');
+            }
+
+            return isValid;
         }
 
         function updateSignature() {
-            // Retrieve and escape inputs
-            const name = escapeHTML(document.getElementById('f-name').value.trim());
-            const position = escapeHTML(document.getElementById('f-position').value.trim());
-            const dept = escapeHTML(document.getElementById('f-dept').value.trim());
-            
-            const emailInput = document.getElementById('f-email');
-            const email = escapeHTML(emailInput.value.trim());
-            
-            const phone = escapeHTML(document.getElementById('f-phone').value.trim());
-            
-            const linkedinInput = document.getElementById('f-linkedin');
-            const linkedin = linkedinInput.value.trim(); // Keep original to test format
+            // Retrieve values
+            const name = document.getElementById('f-name').value.trim();
+            const position = document.getElementById('f-position').value.trim();
+            const dept = document.getElementById('f-dept').value.trim();
+            const email = document.getElementById('f-email').value.trim();
+            const phone = document.getElementById('f-phone').value.trim();
+            const linkedin = document.getElementById('f-linkedin').value.trim();
 
             // DOM Elements
             const elName = document.getElementById('sig-name');
             const elPosition = document.getElementById('sig-position');
             const elDept = document.getElementById('sig-dept');
             const rowDept = document.getElementById('row-dept');
+            
             const elEmail = document.getElementById('sig-email');
+            
             const elPhone = document.getElementById('sig-phone');
             const colPhone = document.getElementById('col-phone');
+            
             const wrapLinkedin = document.getElementById('wrap-linkedin');
             const elLinkedin = document.getElementById('sig-linkedin');
 
-            // Set Text (falling back to placeholders if empty)
-            elName.innerHTML = name || '[Full Name]';
-            elPosition.innerHTML = position || '[Position at MCC]';
+            // Secure assignment using textContent (Prevents XSS HTML Injection)
+            elName.textContent = name || 'Prénom Nom';
+            elPosition.textContent = position || 'Position au MCC';
 
-            // Optional Department Logic
+            // Optional Department
             if (dept) {
-                elDept.innerHTML = dept;
+                elDept.textContent = dept;
                 rowDept.style.display = 'table-row';
+                rowDept.removeAttribute('data-remove');
             } else {
                 rowDept.style.display = 'none';
+                rowDept.setAttribute('data-remove', 'true');
             }
 
-            // Email Logic & Validation
-            if (email) {
-                if (isValidEmail(email)) {
-                    emailInput.classList.remove('invalid');
-                    elEmail.href = `mailto:${email}`;
-                } else {
-                    emailInput.classList.add('invalid');
-                    elEmail.href = '#';
-                }
-            } else {
-                emailInput.classList.remove('invalid');
-                elEmail.href = '#';
-            }
-            elEmail.innerHTML = email || '[Email Address]';
+            // Email
+            elEmail.textContent = email || 'email@domain.com';
+            elEmail.href = email && isValidEmail(email) ? `mailto:${email}` : '#';
 
-            // Phone Logic (Optional)
+            // Phone (Optional)
             if (phone) {
-                elPhone.innerHTML = phone;
+                elPhone.textContent = phone;
                 elPhone.href = `tel:${phone.replace(/\s+/g, '')}`;
                 colPhone.style.display = 'table-cell';
+                colPhone.removeAttribute('data-remove');
             } else {
                 colPhone.style.display = 'none';
+                colPhone.setAttribute('data-remove', 'true');
             }
 
-            // LinkedIn Logic (Optional & Validated)
-            if (linkedin) {
-                if (isValidLinkedIn(linkedin)) {
-                    linkedinInput.classList.remove('invalid');
-                    elLinkedin.href = escapeHTML(linkedin);
-                    wrapLinkedin.style.display = 'inline';
-                } else {
-                    linkedinInput.classList.add('invalid');
-                    wrapLinkedin.style.display = 'none';
-                }
+            // LinkedIn (Optional & Validated)
+            if (linkedin && isValidLinkedIn(linkedin)) {
+                elLinkedin.href = linkedin; // Safe, validated HTTPS URL
+                wrapLinkedin.style.display = 'inline';
+                wrapLinkedin.removeAttribute('data-remove');
             } else {
-                linkedinInput.classList.remove('invalid');
-                wrapLinkedin.style.display = 'none'; // Completely hidden if empty
+                wrapLinkedin.style.display = 'none';
+                wrapLinkedin.setAttribute('data-remove', 'true');
             }
+            
+            // Re-validate inputs visually on typing without blocking
+            validateForm();
         }
 
-        // Create a clean DOM node for copying/downloading that strictly removes "display: none" elements
-        // This ensures hidden optional fields do not show up as empty space in Gmail
+        // Deep clean the HTML structure before copying/downloading
         function getCleanSignatureNode() {
             const originalNode = document.getElementById('signature-output');
             const clone = originalNode.cloneNode(true);
             
-            // Find and physically remove elements marked as display: none
-            const hiddenElements = clone.querySelectorAll('[style*="display: none"]');
-            hiddenElements.forEach(el => {
-                if(el.parentNode) {
-                    el.parentNode.removeChild(el);
+            // Physically remove nodes flagged for deletion to prevent Outlook/Gmail empty spaces
+            const nodesToRemove = clone.querySelectorAll('[data-remove="true"]');
+            nodesToRemove.forEach(node => {
+                if(node.parentNode) {
+                    node.parentNode.removeChild(node);
                 }
             });
+
+            // Strip ID attributes for cleaner exported HTML
+            const allElements = clone.querySelectorAll('*');
+            allElements.forEach(el => el.removeAttribute('id'));
+
             return clone;
         }
 
         async function copySignature() {
-            // Check if there are validation errors before copying
-            if (document.querySelectorAll('.invalid').length > 0) {
-                alert("Please fix the validation errors before copying the signature.");
+            if (!validateForm()) {
+                alert("Veuillez corriger les erreurs dans le formulaire avant de copier.");
                 return;
             }
 
             const cleanNode = getCleanSignatureNode();
             const sigHTML = cleanNode.innerHTML;
-            const sigText = cleanNode.innerText;
+            const sigText = cleanNode.innerText || cleanNode.textContent; // Fallback text
             
-            // Strictly check for Clipboard API and ClipboardItem support
             if (navigator.clipboard && window.ClipboardItem) {
                 try {
                     const htmlBlob = new Blob([sigHTML], { type: "text/html" });
@@ -591,39 +639,50 @@
                     });
                     
                     await navigator.clipboard.write([clipboardItem]);
-                    showToast(); // Guaranteed to only show if the promise resolves
+                    showToast();
                 } catch (err) {
-                    console.warn('Clipboard API rejected the write operation.', err);
-                    triggerFallbackCopy();
+                    console.warn('API presse-papier rejetée, utilisation du fallback.', err);
+                    triggerFallbackCopy(cleanNode);
                 }
             } else {
-                console.warn('Clipboard API / ClipboardItem not supported in this browser.');
-                triggerFallbackCopy();
+                console.warn('API ClipboardItem non supportée.');
+                triggerFallbackCopy(cleanNode);
             }
         }
 
-        function triggerFallbackCopy() {
-            // Select the actual visible node so the user can hit Ctrl+C manually
-            const el = document.getElementById('signature-output');
-            const selection = window.getSelection();
-            const range = document.createRange();
-            
-            range.selectNodeContents(el);
-            selection.removeAllRanges();
-            selection.addRange(range);
+        function triggerFallbackCopy(cleanNode) {
+            const container = document.getElementById('fallback-signature-container');
+            container.innerHTML = ''; 
+            container.appendChild(cleanNode);
             
             showModal('fallback-modal');
+
+            // Auto-select the clean content inside the modal for manual copying
+            const selection = window.getSelection();
+            const range = document.createRange();
+            range.selectNodeContents(container);
+            selection.removeAllRanges();
+            selection.addRange(range);
         }
 
         function downloadHTML() {
-            if (document.querySelectorAll('.invalid').length > 0) {
-                alert("Please fix the validation errors before downloading.");
+            if (!validateForm()) {
+                alert("Veuillez corriger les erreurs dans le formulaire avant de télécharger.");
                 return;
             }
 
             const cleanNode = getCleanSignatureNode();
             const sigHTML = cleanNode.innerHTML;
-            const fullHTML = `<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<title>MCC Email Signature</title>\n</head>\n<body style="padding: 20px;">\n${sigHTML}\n</body>\n</html>`;
+            const fullHTML = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Signature MCC</title>
+</head>
+<body style="padding: 20px;">
+${sigHTML}
+</body>
+</html>`;
             
             const blob = new Blob([fullHTML], { type: "text/html" });
             const url = URL.createObjectURL(blob);
@@ -635,17 +694,15 @@
             a.click();
             document.body.removeChild(a);
             
-            // Proper cleanup delay so the browser has time to trigger the download
             setTimeout(() => {
                 URL.revokeObjectURL(url);
-            }, 150);
+            }, 200);
         }
 
         function resetForm() {
             document.getElementById('sig-form').reset();
-            // Remove any leftover validation error outlines
             document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
-            updateSignature();
+            updateSignature(); // Réinitialise l'aperçu
         }
 
         function showModal(id) {
@@ -654,6 +711,7 @@
 
         function closeModals() {
             document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+            window.getSelection().removeAllRanges(); // Clear fallback selection if closed
         }
 
         function showToast() {
@@ -664,14 +722,12 @@
             }, 3500);
         }
 
-        // Close modals on clicking outside
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 closeModals();
             }
         }
 
-        // Initialize preview on load
         document.addEventListener('DOMContentLoaded', updateSignature);
     </script>
 </body>
