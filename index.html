@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCC Email Signature Generator</title>
+    <title>MCC Email Signature Generator V3</title>
     <style>
         /* Premium Corporate Aesthetics */
         :root {
@@ -308,7 +308,7 @@
     <div class="container">
         <!-- Form Area -->
         <div class="card">
-            <h2 class="card-header">Détails du membre</h2>
+            <h2 class="card-header">Identité du membre</h2>
             <form id="sig-form" onsubmit="return false;">
                 
                 <div class="form-group">
@@ -329,7 +329,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="f-email">Email professionnel <span class="required-badge">*</span></label>
+                    <label for="f-email">Email personnel <span class="required-badge">*</span></label>
                     <input type="email" id="f-email" placeholder="Ex: prenom.nom@domain.com" oninput="updateSignature()" required>
                     <span class="error-msg" id="err-email">Veuillez saisir une adresse email valide.</span>
                 </div>
@@ -340,7 +340,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="f-linkedin">Lien Profil LinkedIn <span class="optional-badge">(Optionnel)</span></label>
+                    <label for="f-linkedin">Profil LinkedIn personnel <span class="optional-badge">(Optionnel)</span></label>
                     <input type="url" id="f-linkedin" placeholder="Ex: https://www.linkedin.com/in/votreprofil" oninput="updateSignature()">
                     <span class="error-msg" id="err-linkedin">L'URL doit commencer par https://www.linkedin.com/in/ ou https://linkedin.com/in/</span>
                 </div>
@@ -364,16 +364,26 @@
                 
                 <!-- START EMAIL SIGNATURE HTML -->
                 <div id="signature-output">
-                    <table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 13px; color: #333333; width: 100%; max-width: 500px; background-color: #ffffff; line-height: 1.4;">
+                    <table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 13px; color: #333333; width: 100%; max-width: 550px; background-color: #ffffff; line-height: 1.4;">
                         <tr>
-                            <!-- Logo Area (Absolute URL, fixed dimensions, no onerror) -->
-                            <td width="90" valign="top" style="padding-right: 18px; border-right: 2px solid #041E42; width: 90px; max-width: 90px;">
-                                <img src="https://yassines01.github.io/mcc-email-signature/Logo.png" alt="MCC Logo" width="90" style="display: block; width: 90px; max-width: 90px; border: 0; height: auto;">
+                            <!-- 1. Logo Area (110x110) -->
+                            <td width="110" valign="middle" style="padding-right: 20px; width: 110px; max-width: 110px;">
+                                <img src="https://yassines01.github.io/mcc-email-signature/Logo.png" alt="MCC Logo" width="110" style="display: block; width: 110px; max-width: 110px; border: 0; height: auto;">
                             </td>
                             
-                            <!-- Content Area -->
-                            <td valign="top" style="padding-left: 18px;">
+                            <!-- 2. Vertical Divider Area (80px height, centered vertically) -->
+                            <td width="2" valign="middle" style="padding-right: 20px; width: 2px;">
+                                <table cellpadding="0" cellspacing="0" border="0" style="width: 2px; height: 80px; background-color: #041E42;">
+                                    <tr>
+                                        <td style="font-size:0; line-height:0;">&nbsp;</td>
+                                    </tr>
+                                </table>
+                            </td>
+                            
+                            <!-- 3. Content Area -->
+                            <td valign="middle">
                                 <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                                    <!-- PARTIE 1 : IDENTITÉ DU MEMBRE -->
                                     <tr>
                                         <td style="padding-bottom: 2px;">
                                             <span id="sig-name" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; color: #041E42;">Prénom Nom</span>
@@ -384,16 +394,13 @@
                                             <span id="sig-position" style="font-family: Arial, sans-serif; font-size: 13px; color: #475569;">Position au MCC</span>
                                         </td>
                                     </tr>
-                                    <!-- Department Row -->
                                     <tr id="row-dept" data-remove="true" style="display: none;">
                                         <td style="padding-bottom: 4px;">
                                             <span id="sig-dept" style="font-family: Arial, sans-serif; font-size: 12px; color: #64748B;"></span>
                                         </td>
                                     </tr>
-                                    
-                                    <!-- Contact Info Row -->
                                     <tr>
-                                        <td style="padding-top: 6px; padding-bottom: 10px;">
+                                        <td style="padding-top: 4px; padding-bottom: 12px;">
                                             <table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 12px; color: #333333;">
                                                 <tr>
                                                     <td id="col-email" style="padding-right: 8px;">
@@ -407,11 +414,14 @@
                                         </td>
                                     </tr>
                                     
-                                    <!-- Branding Footer -->
+                                    <!-- PARTIE 2 : IDENTITÉ INSTITUTIONNELLE MCC -->
                                     <tr>
-                                        <td style="border-top: 1px solid #E2E8F0; padding-top: 10px;">
+                                        <td style="border-top: 1px solid #E2E8F0; padding-top: 12px;">
                                             <span style="font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; color: #041E42; display: block; letter-spacing: 0.5px;">MOHAMMADIA CONSULTING CLUB</span>
                                             <span style="font-family: Arial, sans-serif; font-size: 11px; color: #64748B; font-style: italic; display: block; margin-top: 2px;">Be part of the solution.</span>
+                                            <span style="font-family: Arial, sans-serif; font-size: 11px; display: block; margin-top: 4px;">
+                                                <a href="mailto:mohammadiaconsultingclub@gmail.com" style="color: #041E42; text-decoration: none;">mohammadiaconsultingclub@gmail.com</a>
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -419,11 +429,16 @@
                                             <table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 11px;">
                                                 <tr>
                                                     <td>
+                                                        <!-- Liens fixes institutionnels -->
+                                                        <a href="https://ma.linkedin.com/company/mohammadia-consulting" target="_blank" style="color: #041E42; text-decoration: none; font-weight: bold;">LinkedIn MCC</a>
+                                                        <span style="color: #041E42; margin: 0 4px;">|</span>
+                                                        <a href="https://www.instagram.com/mohammadia.cosulting/" target="_blank" style="color: #041E42; text-decoration: none; font-weight: bold;">Instagram MCC</a>
+                                                        
+                                                        <!-- Lien optionnel personnel -->
                                                         <span id="wrap-linkedin" data-remove="true" style="display: none;">
-                                                            <a id="sig-linkedin" href="#" target="_blank" style="color: #041E42; text-decoration: none; font-weight: bold;">LinkedIn</a>
-                                                            <span style="color: #041E42; margin: 0 6px;">|</span>
+                                                            <span style="color: #041E42; margin: 0 4px;">|</span>
+                                                            <a id="sig-linkedin" href="#" target="_blank" style="color: #041E42; text-decoration: none; font-weight: bold;">LinkedIn Personnel</a>
                                                         </span>
-                                                        <a href="https://www.instagram.com/mohammadia.cosulting/" target="_blank" style="color: #041E42; text-decoration: none; font-weight: bold;">Instagram</a>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -463,7 +478,6 @@
             <h3>Copie manuelle requise</h3>
             <p style="margin-bottom: 1rem; color: #475569;">Votre navigateur a bloqué la copie automatique en texte enrichi. Pour conserver le design parfait sur Gmail, suivez ces étapes :</p>
             
-            <!-- Safe container for manual copy -->
             <div id="fallback-signature-container"></div>
             
             <ul style="margin-bottom: 1.5rem; color: #1E293B;">
@@ -488,7 +502,6 @@
         }
 
         function isValidLinkedIn(url) {
-            // Must strictly start with https://www.linkedin.com/in/ or https://linkedin.com/in/
             return /^https:\/\/(www\.)?linkedin\.com\/in\/[^\s]+$/i.test(url);
         }
 
@@ -533,7 +546,6 @@
         }
 
         function updateSignature() {
-            // Retrieve values
             const name = document.getElementById('f-name').value.trim();
             const position = document.getElementById('f-position').value.trim();
             const dept = document.getElementById('f-dept').value.trim();
@@ -541,7 +553,6 @@
             const phone = document.getElementById('f-phone').value.trim();
             const linkedin = document.getElementById('f-linkedin').value.trim();
 
-            // DOM Elements
             const elName = document.getElementById('sig-name');
             const elPosition = document.getElementById('sig-position');
             const elDept = document.getElementById('sig-dept');
@@ -555,11 +566,10 @@
             const wrapLinkedin = document.getElementById('wrap-linkedin');
             const elLinkedin = document.getElementById('sig-linkedin');
 
-            // Secure assignment using textContent (Prevents XSS HTML Injection)
+            // Identity
             elName.textContent = name || 'Prénom Nom';
             elPosition.textContent = position || 'Position au MCC';
 
-            // Optional Department
             if (dept) {
                 elDept.textContent = dept;
                 rowDept.style.display = 'table-row';
@@ -569,11 +579,10 @@
                 rowDept.setAttribute('data-remove', 'true');
             }
 
-            // Email
+            // Personal Contact
             elEmail.textContent = email || 'email@domain.com';
             elEmail.href = email && isValidEmail(email) ? `mailto:${email}` : '#';
 
-            // Phone (Optional)
             if (phone) {
                 elPhone.textContent = phone;
                 elPhone.href = `tel:${phone.replace(/\s+/g, '')}`;
@@ -584,9 +593,9 @@
                 colPhone.setAttribute('data-remove', 'true');
             }
 
-            // LinkedIn (Optional & Validated)
+            // Personal LinkedIn (Optional)
             if (linkedin && isValidLinkedIn(linkedin)) {
-                elLinkedin.href = linkedin; // Safe, validated HTTPS URL
+                elLinkedin.href = linkedin; 
                 wrapLinkedin.style.display = 'inline';
                 wrapLinkedin.removeAttribute('data-remove');
             } else {
@@ -594,16 +603,13 @@
                 wrapLinkedin.setAttribute('data-remove', 'true');
             }
             
-            // Re-validate inputs visually on typing without blocking
             validateForm();
         }
 
-        // Deep clean the HTML structure before copying/downloading
         function getCleanSignatureNode() {
             const originalNode = document.getElementById('signature-output');
             const clone = originalNode.cloneNode(true);
             
-            // Physically remove nodes flagged for deletion to prevent Outlook/Gmail empty spaces
             const nodesToRemove = clone.querySelectorAll('[data-remove="true"]');
             nodesToRemove.forEach(node => {
                 if(node.parentNode) {
@@ -611,7 +617,6 @@
                 }
             });
 
-            // Strip ID attributes for cleaner exported HTML
             const allElements = clone.querySelectorAll('*');
             allElements.forEach(el => el.removeAttribute('id'));
 
@@ -626,7 +631,7 @@
 
             const cleanNode = getCleanSignatureNode();
             const sigHTML = cleanNode.innerHTML;
-            const sigText = cleanNode.innerText || cleanNode.textContent; // Fallback text
+            const sigText = cleanNode.innerText || cleanNode.textContent; 
             
             if (navigator.clipboard && window.ClipboardItem) {
                 try {
@@ -657,7 +662,6 @@
             
             showModal('fallback-modal');
 
-            // Auto-select the clean content inside the modal for manual copying
             const selection = window.getSelection();
             const range = document.createRange();
             range.selectNodeContents(container);
@@ -673,16 +677,7 @@
 
             const cleanNode = getCleanSignatureNode();
             const sigHTML = cleanNode.innerHTML;
-            const fullHTML = `<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Signature MCC</title>
-</head>
-<body style="padding: 20px;">
-${sigHTML}
-</body>
-</html>`;
+            const fullHTML = `<!DOCTYPE html>\n<html lang="fr">\n<head>\n<meta charset="UTF-8">\n<title>Signature MCC</title>\n</head>\n<body style="padding: 20px;">\n${sigHTML}\n</body>\n</html>`;
             
             const blob = new Blob([fullHTML], { type: "text/html" });
             const url = URL.createObjectURL(blob);
@@ -702,7 +697,7 @@ ${sigHTML}
         function resetForm() {
             document.getElementById('sig-form').reset();
             document.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
-            updateSignature(); // Réinitialise l'aperçu
+            updateSignature(); 
         }
 
         function showModal(id) {
@@ -711,7 +706,7 @@ ${sigHTML}
 
         function closeModals() {
             document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-            window.getSelection().removeAllRanges(); // Clear fallback selection if closed
+            window.getSelection().removeAllRanges(); 
         }
 
         function showToast() {
