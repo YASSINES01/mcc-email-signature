@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCC Email Signature Generator</title>
+    <title>MCC Email Signature Generator V5</title>
     <style>
-        /* --- BRANDING & UI STYLES (Interface Web Uniquement) --- */
+        /* --- INTERFACE WEB & BRANDING (N'affecte pas la signature exportée) --- */
         :root {
             --navy: #041E42;
             --navy-hover: #03142B;
@@ -16,6 +16,7 @@
             --text-main: #1E293B;
             --text-muted: #64748B;
             --error: #EF4444;
+            --success: #10B981;
         }
 
         * {
@@ -71,7 +72,7 @@
 
         .card {
             background: var(--white);
-            padding: 2rem 2.5rem;
+            padding: 2.5rem;
             border-radius: 8px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--border-color);
@@ -100,14 +101,14 @@
             margin-bottom: 0.4rem;
         }
 
-        .optional-badge {
+        .badge-optional {
             font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 400;
             margin-left: 0.25rem;
         }
         
-        .required-badge {
+        .badge-required {
             color: var(--error);
             margin-left: 0.25rem;
         }
@@ -271,7 +272,7 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: #10B981;
+            background: var(--success);
             color: var(--white);
             padding: 1rem 2rem;
             border-radius: 4px;
@@ -300,44 +301,44 @@
     </header>
 
     <div class="container">
-        <!-- SECTION FORMULAIRE -->
+        <!-- FORMULAIRE -->
         <div class="card">
             <h2 class="card-header">Identité du membre</h2>
             <form id="sig-form" onsubmit="return false;">
                 
                 <div class="form-group">
-                    <label for="f-name">Nom complet <span class="required-badge">*</span></label>
+                    <label for="f-name">Nom complet <span class="badge-required">*</span></label>
                     <input type="text" id="f-name" placeholder="Ex: Yassine Sassioui" oninput="updateSignature()" required>
-                    <span class="error-msg">Le nom est obligatoire.</span>
+                    <span class="error-msg">Le nom complet est obligatoire.</span>
                 </div>
                 
                 <div class="form-group">
-                    <label for="f-position">Fonction au MCC <span class="required-badge">*</span></label>
+                    <label for="f-position">Fonction au MCC <span class="badge-required">*</span></label>
                     <input type="text" id="f-position" placeholder="Ex: President" oninput="updateSignature()" required>
                     <span class="error-msg">La fonction est obligatoire.</span>
                 </div>
                 
                 <div class="form-group">
-                    <label for="f-dept">Département <span class="optional-badge">(Optionnel)</span></label>
+                    <label for="f-dept">Département <span class="badge-optional">(Optionnel)</span></label>
                     <input type="text" id="f-dept" placeholder="Ex: Executive Board" oninput="updateSignature()">
                 </div>
                 
                 <div class="form-group">
-                    <label for="f-email">Email professionnel <span class="required-badge">*</span></label>
+                    <label for="f-email">Email professionnel <span class="badge-required">*</span></label>
                     <input type="email" id="f-email" placeholder="Ex: prenom.nom@domain.com" oninput="updateSignature()" required>
-                    <span class="error-msg">Veuillez saisir une adresse email valide.</span>
+                    <span class="error-msg">Veuillez saisir une adresse email professionnelle valide.</span>
                 </div>
                 
                 <div class="form-group">
-                    <label for="f-phone">Numéro de téléphone <span class="optional-badge">(Optionnel)</span></label>
+                    <label for="f-phone">Numéro de téléphone <span class="badge-optional">(Optionnel)</span></label>
                     <input type="tel" id="f-phone" placeholder="Ex: +212 6 00 00 00 00" oninput="updateSignature()">
-                    <span class="error-msg">Numéro invalide.</span>
+                    <span class="error-msg">Format de téléphone invalide.</span>
                 </div>
                 
                 <div class="form-group">
-                    <label for="f-linkedin">Profil LinkedIn personnel <span class="optional-badge">(Optionnel)</span></label>
+                    <label for="f-linkedin">Profil LinkedIn personnel <span class="badge-optional">(Optionnel)</span></label>
                     <input type="url" id="f-linkedin" placeholder="Ex: https://www.linkedin.com/in/votreprofil" oninput="updateSignature()">
-                    <span class="error-msg">URL sécurisée requise (https://www.linkedin.com/in/...)</span>
+                    <span class="error-msg">URL sécurisée exigée (doit commencer par https://www.linkedin.com/in/)</span>
                 </div>
                 
                 <div class="btn-group">
@@ -352,42 +353,42 @@
             </form>
         </div>
 
-        <!-- SECTION APERÇU & EXPORT -->
+        <!-- APERÇU ET SIGNATURE HTML GÉNÉRÉE -->
         <div class="card">
             <h2 class="card-header">Aperçu de la signature</h2>
             <div class="preview-container">
                 
                 <!-- DÉBUT DU HTML DE LA SIGNATURE (Strict Email-safe) -->
-                <!-- Note : Toutes les balises textuelles ont font-family déclaré pour bypasser le reset d'Outlook -->
                 <div id="signature-output">
-                    <table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 13px; color: #333333; width: 100%; max-width: 600px; background-color: #ffffff;">
+                    <!-- Table principale (Largeur max contrôlée pour éviter l'étalement) -->
+                    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%; max-width: 600px; background-color: #ffffff; font-family: Arial, sans-serif; font-size: 13px; color: #333333;">
                         <tr>
-                            <!-- 1. Logo Area (width 110px stricte, height auto) -->
+                            <!-- 1. Logo (Dimensions strictes pour éviter le bug 120 DPI d'Outlook) -->
                             <td width="110" valign="middle" style="width: 110px; min-width: 110px; padding: 0;">
                                 <img src="https://yassines01.github.io/mcc-email-signature/Logo.png" alt="MCC Logo" width="110" style="display: block; width: 110px; max-width: 110px; height: auto; border: 0; outline: none; text-decoration: none;">
                             </td>
                             
-                            <!-- Spacing Cell avec mso-hacks pour Outlook -->
+                            <!-- Spacing Horizontal 1 (Hacks Outlook mso-line-height-rule) -->
                             <td width="15" valign="middle" style="width: 15px; min-width: 15px; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; padding: 0;">&nbsp;</td>
 
-                            <!-- 2. Vertical Divider Area (Centré verticalement, 75px de haut) -->
+                            <!-- 2. Séparateur Vertical (Centré) -->
                             <td width="2" valign="middle" style="width: 2px; padding: 0;">
-                                <table cellpadding="0" cellspacing="0" border="0" style="width: 2px; background-color: #041E42;">
+                                <table cellpadding="0" cellspacing="0" border="0" width="2" style="width: 2px; background-color: #041E42;">
                                     <tr>
-                                        <!-- Utilisation de mso-line-height-rule pour verrouiller la hauteur sur Outlook -->
-                                        <td style="font-size:1px; line-height:1px; height: 75px; mso-line-height-rule: exactly;">&nbsp;</td>
+                                        <!-- Hauteur forcée à 75px pour la ligne bleue -->
+                                        <td width="2" height="75" style="width: 2px; height: 75px; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly;">&nbsp;</td>
                                     </tr>
                                 </table>
                             </td>
                             
-                            <!-- Spacing Cell avec mso-hacks pour Outlook -->
+                            <!-- Spacing Horizontal 2 -->
                             <td width="15" valign="middle" style="width: 15px; min-width: 15px; font-size: 1px; line-height: 1px; mso-line-height-rule: exactly; padding: 0;">&nbsp;</td>
 
-                            <!-- 3. Content Area -->
+                            <!-- 3. Contenu de la signature -->
                             <td valign="middle" style="padding: 0;">
-                                <table cellpadding="0" cellspacing="0" border="0" style="width: 100%;">
+                                <table cellpadding="0" cellspacing="0" border="0" width="100%" style="width: 100%;">
                                     
-                                    <!-- PARTIE 1 : IDENTITÉ PERSONNELLE DU MEMBRE -->
+                                    <!-- ================= PARTIE 1 : MEMBRE ================= -->
                                     <tr>
                                         <td style="padding-bottom: 2px; line-height: 1.2;">
                                             <span id="sig-name" style="font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; color: #041E42;">Prénom Nom</span>
@@ -405,6 +406,7 @@
                                     </tr>
                                     <tr>
                                         <td style="padding-top: 2px; padding-bottom: 12px; line-height: 1.3;">
+                                            <!-- Sous-tableau pour alignement contact -->
                                             <table cellpadding="0" cellspacing="0" border="0">
                                                 <tr>
                                                     <td id="col-email" style="padding-right: 8px;">
@@ -418,7 +420,7 @@
                                         </td>
                                     </tr>
                                     
-                                    <!-- PARTIE 2 : IDENTITÉ INSTITUTIONNELLE MCC -->
+                                    <!-- ================= PARTIE 2 : INSTITUTION ================= -->
                                     <tr>
                                         <td style="border-top: 1px solid #E2E8F0; padding-top: 12px; line-height: 1.3;">
                                             <span style="font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; color: #041E42; display: block; letter-spacing: 0.5px;">MOHAMMADIA CONSULTING CLUB</span>
@@ -433,12 +435,14 @@
                                             <table cellpadding="0" cellspacing="0" border="0">
                                                 <tr>
                                                     <td>
-                                                        <!-- Liens Institutionnels (Permanents) -->
+                                                        <!-- Fixe : LinkedIn MCC -->
                                                         <a href="https://ma.linkedin.com/company/mohammadia-consulting" target="_blank" style="font-family: Arial, sans-serif; font-size: 11px; color: #041E42; text-decoration: none; font-weight: bold;">LinkedIn MCC</a>
                                                         <span style="font-family: Arial, sans-serif; font-size: 11px; color: #041E42; margin: 0 4px;">|</span>
+                                                        
+                                                        <!-- Fixe : Instagram MCC -->
                                                         <a href="https://www.instagram.com/mohammadia.cosulting/" target="_blank" style="font-family: Arial, sans-serif; font-size: 11px; color: #041E42; text-decoration: none; font-weight: bold;">Instagram MCC</a>
                                                         
-                                                        <!-- Lien Personnel (Facultatif) -->
+                                                        <!-- Facultatif : LinkedIn Personnel -->
                                                         <span id="wrap-linkedin" data-remove="true" style="display: none;">
                                                             <span style="font-family: Arial, sans-serif; font-size: 11px; color: #041E42; margin: 0 4px;">|</span>
                                                             <a id="sig-linkedin" href="#" target="_blank" style="font-family: Arial, sans-serif; font-size: 11px; color: #041E42; text-decoration: none; font-weight: bold;">LinkedIn Personnel</a>
@@ -453,7 +457,7 @@
                         </tr>
                     </table>
                 </div>
-                <!-- FIN DU HTML DE LA SIGNATURE -->
+                <!-- FIN DE LA SIGNATURE HTML -->
 
             </div>
         </div>
@@ -462,14 +466,14 @@
     <!-- Modales & Notifications -->
     <div id="guide-modal" class="modal">
         <div class="modal-content">
-            <h3>Guide d'installation</h3>
+            <h3>Guide d'installation Gmail / Outlook</h3>
             <ol>
-                <li>Cliquez sur le bouton <strong>Copier la Signature</strong>.</li>
-                <li>Ouvrez votre client de messagerie (ex: Gmail, Outlook).</li>
+                <li>Cliquez sur le bouton <strong>Copier la Signature</strong> (une notification de succès apparaîtra).</li>
+                <li>Ouvrez votre client de messagerie.</li>
                 <li>Accédez aux <strong>Paramètres de signature</strong>.</li>
                 <li>Créez une nouvelle signature.</li>
                 <li>Cliquez dans la zone d'édition et faites <strong>Coller</strong> (Ctrl+V / Cmd+V).</li>
-                <li>Enregistrez les modifications.</li>
+                <li>Enregistrez les modifications en bas de page.</li>
             </ol>
             <button class="btn-primary" onclick="closeModals()">Fermer</button>
         </div>
@@ -478,55 +482,52 @@
     <div id="fallback-modal" class="modal">
         <div class="modal-content">
             <h3>Copie manuelle requise</h3>
-            <p style="margin-bottom: 1rem; color: #475569;">Votre navigateur ou votre configuration système bloque la copie automatique du format HTML. Pour conserver la mise en page professionnelle :</p>
+            <p style="margin-bottom: 1rem; color: #475569;">Votre navigateur a bloqué l'accès direct au presse-papiers (mesure de sécurité courante). Pour finaliser :</p>
             
             <div id="fallback-signature-container"></div>
             
             <ul style="margin-bottom: 1.5rem; color: #1E293B;">
-                <li>La signature finale a été <strong>mise en surbrillance</strong>.</li>
-                <li>Appuyez sur <strong>Ctrl+C</strong> (Windows) ou <strong>Cmd+C</strong> (Mac) pour la copier.</li>
+                <li>La signature ci-dessus a été <strong>automatiquement sélectionnée</strong>.</li>
+                <li>Appuyez simultanément sur <strong>Ctrl + C</strong> (Windows) ou <strong>Cmd + C</strong> (Mac).</li>
                 <li>Collez-la directement dans les paramètres de votre messagerie.</li>
             </ul>
-            <button class="btn-primary" onclick="closeModals()">Terminer</button>
+            <button class="btn-primary" onclick="closeModals()">J'ai terminé</button>
         </div>
     </div>
 
     <div id="toast" class="toast">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
-        Signature copiée avec succès !
+        Signature copiée au format enrichi !
     </div>
 
     <script>
         /**
-         * ==========================================
-         * 1. MODULE DE SÉCURITÉ ET VALIDATION
-         * ==========================================
+         * 1. VALIDATION ET SÉCURITÉ
          */
         
-        // Regex stricte pour garantir le format email
         function isValidEmail(email) {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         }
 
-        // Validation robuste du téléphone (autorise format international)
         function isValidPhone(phone) {
-            if (!phone) return true; // Facultatif
+            if (!phone) return true;
+            // Supprime les espaces, tirets et points pour tester la structure numérique
             const stripped = phone.replace(/[\s\-\.\(\)]/g, '');
             return /^(\+?\d{8,15})$/.test(stripped);
         }
 
-        // Utilisation de l'API URL native pour éviter le contournement de domaine (XSS)
         function isValidLinkedIn(urlStr) {
-            if (!urlStr) return true; // Facultatif
+            if (!urlStr) return true;
             try {
+                // Utilisation de l'API URL pour éviter les contournements d'expressions régulières
                 const url = new URL(urlStr);
-                // Refus de http:// ou javascript://
                 if (url.protocol !== 'https:') return false;
-                // Restriction au domaine exact
-                const validHosts = ['linkedin.com', 'www.linkedin.com', 'ma.linkedin.com'];
+                
+                const validHosts = ['linkedin.com', 'www.linkedin.com', 'ma.linkedin.com', 'fr.linkedin.com'];
                 if (!validHosts.includes(url.hostname.toLowerCase())) return false;
-                // Restriction au chemin /in/ ou /company/
-                if (!url.pathname.startsWith('/in/') && !url.pathname.startsWith('/company/')) return false;
+                
+                if (!url.pathname.startsWith('/in/')) return false;
+                
                 return true;
             } catch (e) {
                 return false;
@@ -534,15 +535,12 @@
         }
 
         /**
-         * ==========================================
-         * 2. LOGIQUE DU FORMULAIRE ET APERÇU
-         * ==========================================
+         * 2. MISE À JOUR DE L'APERÇU (REAL-TIME)
          */
 
         function validateForm() {
             let isValid = true;
 
-            // 1. Nom
             const nameInput = document.getElementById('f-name');
             if (!nameInput.value.trim()) {
                 nameInput.classList.add('invalid');
@@ -551,7 +549,6 @@
                 nameInput.classList.remove('invalid');
             }
 
-            // 2. Position
             const positionInput = document.getElementById('f-position');
             if (!positionInput.value.trim()) {
                 positionInput.classList.add('invalid');
@@ -560,7 +557,6 @@
                 positionInput.classList.remove('invalid');
             }
 
-            // 3. Email Professionnel (Obligatoire)
             const emailInput = document.getElementById('f-email');
             const emailVal = emailInput.value.trim();
             if (!emailVal || !isValidEmail(emailVal)) {
@@ -570,7 +566,6 @@
                 emailInput.classList.remove('invalid');
             }
 
-            // 4. Téléphone (Facultatif)
             const phoneInput = document.getElementById('f-phone');
             const phoneVal = phoneInput.value.trim();
             if (phoneVal && !isValidPhone(phoneVal)) {
@@ -580,7 +575,6 @@
                 phoneInput.classList.remove('invalid');
             }
 
-            // 5. LinkedIn Perso (Facultatif)
             const linkedinInput = document.getElementById('f-linkedin');
             const linkedinVal = linkedinInput.value.trim();
             if (linkedinVal && !isValidLinkedIn(linkedinVal)) {
@@ -594,7 +588,6 @@
         }
 
         function updateSignature() {
-            // Lecture
             const name = document.getElementById('f-name').value.trim();
             const position = document.getElementById('f-position').value.trim();
             const dept = document.getElementById('f-dept').value.trim();
@@ -602,7 +595,6 @@
             const phone = document.getElementById('f-phone').value.trim();
             const linkedin = document.getElementById('f-linkedin').value.trim();
 
-            // Cibles
             const elName = document.getElementById('sig-name');
             const elPosition = document.getElementById('sig-position');
             const elDept = document.getElementById('sig-dept');
@@ -615,7 +607,7 @@
             const wrapLinkedin = document.getElementById('wrap-linkedin');
             const elLinkedin = document.getElementById('sig-linkedin');
 
-            // Mise à jour sécurisée via textContent (neutralise les balises HTML)
+            // XSS Prevention: Strict textContent usage
             elName.textContent = name || 'Prénom Nom';
             elPosition.textContent = position || 'Fonction au MCC';
 
@@ -633,7 +625,7 @@
 
             if (phone && isValidPhone(phone)) {
                 elPhone.textContent = phone;
-                elPhone.href = `tel:${phone.replace(/[\s\-\.\(\)]/g, '')}`; // Nettoyage strict pour le lien tel:
+                elPhone.href = `tel:${phone.replace(/[\s\-\.\(\)]/g, '')}`;
                 colPhone.style.display = 'table-cell';
                 colPhone.removeAttribute('data-remove');
             } else {
@@ -643,7 +635,6 @@
 
             if (linkedin && isValidLinkedIn(linkedin)) {
                 try {
-                    // Normalisation via l'API URL pour extraire le href propre
                     const safeUrl = new URL(linkedin).href;
                     elLinkedin.href = safeUrl; 
                     wrapLinkedin.style.display = 'inline';
@@ -661,17 +652,14 @@
         }
 
         /**
-         * ==========================================
-         * 3. MODULE D'EXPORT ET DE NETTOYAGE DU DOM
-         * ==========================================
+         * 3. MÉCANISMES D'EXPORTATION ET NETTOYAGE DOM
          */
 
-        // Clone et nettoie le HTML pour garantir un export pur, sans classes ni éléments orphelins
         function getCleanSignatureNode() {
             const originalNode = document.getElementById('signature-output');
             const clone = originalNode.cloneNode(true);
             
-            // 1. Destruction physique des éléments marqués facultatifs et non remplis
+            // Élimination physique des nœuds facultatifs vides pour prévenir le rendu d'espaces sous Outlook
             const nodesToRemove = clone.querySelectorAll('[data-remove="true"]');
             nodesToRemove.forEach(node => {
                 if(node.parentNode) {
@@ -679,11 +667,12 @@
                 }
             });
 
-            // 2. Nettoyage des attributs de travail (id, class) qui peuvent interférer avec le client webmail
+            // Élimination des attributs techniques propres à l'application web
             const allElements = clone.querySelectorAll('*');
             allElements.forEach(el => {
                 el.removeAttribute('id');
                 el.removeAttribute('class');
+                el.removeAttribute('data-remove');
             });
 
             return clone;
@@ -691,7 +680,7 @@
 
         async function copySignature() {
             if (!validateForm()) {
-                alert("Copie annulée : Veuillez corriger les champs en rouge.");
+                alert("Impossible d'exporter la signature : Veuillez corriger les champs signalés en rouge.");
                 return;
             }
 
@@ -701,7 +690,7 @@
             
             if (navigator.clipboard && window.ClipboardItem) {
                 try {
-                    // Création de Blob explicites avec encodage UTF-8 pour préserver les accents
+                    // Blob encodés UTF-8 garantis
                     const htmlBlob = new Blob([sigHTML], { type: "text/html;charset=utf-8" });
                     const textBlob = new Blob([sigText], { type: "text/plain;charset=utf-8" });
                     
@@ -713,11 +702,11 @@
                     await navigator.clipboard.write([clipboardItem]);
                     showToast();
                 } catch (err) {
-                    console.warn("Échec de l'écriture sécurisée dans le presse-papier.", err);
+                    console.warn("Écriture ClipboardItem bloquée par les autorisations. Lancement du fallback.", err);
                     triggerFallbackCopy(cleanNode);
                 }
             } else {
-                console.warn("API ClipboardItem non supportée par ce contexte.");
+                console.warn("ClipboardItem non supporté. Lancement du fallback.");
                 triggerFallbackCopy(cleanNode);
             }
         }
@@ -729,7 +718,6 @@
             
             showModal('fallback-modal');
 
-            // Sélection automatique robuste via l'API Range
             const selection = window.getSelection();
             const range = document.createRange();
             range.selectNodeContents(container);
@@ -739,15 +727,25 @@
 
         function downloadHTML() {
             if (!validateForm()) {
-                alert("Téléchargement annulé : Veuillez corriger les champs en rouge.");
+                alert("Impossible de télécharger le fichier : Veuillez corriger les champs signalés en rouge.");
                 return;
             }
 
             const cleanNode = getCleanSignatureNode();
             const sigHTML = cleanNode.innerHTML;
             
-            // Format HTML autonome
-            const fullHTML = `<!DOCTYPE html>\n<html lang="fr">\n<head>\n<meta charset="UTF-8">\n<title>Signature MCC</title>\n</head>\n<body style="padding: 20px;">\n${sigHTML}\n</body>\n</html>`;
+            // Création d'un document complet valide pour visualisation offline ou insertion
+            const fullHTML = `<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signature Email MCC</title>
+</head>
+<body style="padding: 20px; background-color: #FFFFFF;">
+${sigHTML}
+</body>
+</html>`;
             
             const blob = new Blob([fullHTML], { type: "text/html;charset=utf-8" });
             const url = URL.createObjectURL(blob);
@@ -761,7 +759,7 @@
             
             setTimeout(() => {
                 URL.revokeObjectURL(url);
-            }, 300); // Délai augmenté pour garantir l'exécution sur navigateurs lents
+            }, 500); 
         }
 
         function resetForm() {
@@ -771,9 +769,7 @@
         }
 
         /**
-         * ==========================================
-         * 4. GESTION DE L'INTERFACE (Modales/Toasts)
-         * ==========================================
+         * 4. GESTION DES ÉVÉNEMENTS D'INTERFACE
          */
         
         function showModal(id) {
@@ -799,7 +795,7 @@
             }
         }
 
-        // Initialisation sécurisée
+        // Exécution initiale sécurisée après le parsing du DOM
         document.addEventListener('DOMContentLoaded', updateSignature);
     </script>
 </body>
